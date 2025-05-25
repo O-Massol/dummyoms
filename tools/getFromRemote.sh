@@ -1,35 +1,21 @@
 #!/bin/bash
 
-# Configuration
-AUTH_FILE="../ignored/sftpAuth"
-REMOTE_USER="omassol"
-REMOTE_HOST="1.studio.boardgamearena.com"
-REMOTE_PORT="2022"
-REMOTE_DIR="/dummyoms"
+# Dossier monté par GVFS (adapte ce nom si nécessaire)
+GVFS_PATH="/run/user/$(id -u)/gvfs/sftp:host=1.studio.boardgamearena.com,port=2022"
+REMOTE_DIR="$GVFS_PATH/dummyoms"
 LOCAL_DIR="../game"
 
-# Vérification du fichier contenant le mot de passe
-if [ ! -f "$AUTH_FILE" ]; then
-  echo "Erreur : le fichier '$AUTH_FILE' est introuvable."
+# Vérifie que le point de montage est disponible
+if [ ! -d "$REMOTE_DIR" ]; then
+  echo "Erreur : le dossier distant '$REMOTE_DIR' n'est pas monté."
+  echo "Connecte-toi d'abord via Fichiers > Autres emplacements."
   exit 1
 fi
 
-PASSWORD=$(<"$AUTH_FILE")
-
-# Création du dossier local si nécessaire
+# Crée le dossier local si besoin
 mkdir -p "$LOCAL_DIR"
 
-# Fichier batch temporaire pour SFTP
-BATCH_FILE=$(mktemp)
-cat <<EOF > "$BATCH_FILE"
-cd $REMOTE_DIR
-lcd $LOCAL_DIR
-mget -r *
-bye
-EOF
+# Copie récursive des fichiers
+cp -r "$REMOTE_DIR"/* "$LOCAL_DIR"
 
-# Exécution de la commande SFTP avec sshpass
-sshpass -p "$PASSWORD" sftp -oStrictHostKeyChecking=no -oPort=$REMOTE_PORT -b "$BATCH_FILE" "$REMOTE_USER@$REMOTE_HOST"
-
-# Nettoyage
-rm "$BATCH_FILE"
+echo "✔️ Fichiers copiés dans : $LOCAL_DIR"
