@@ -107,6 +107,15 @@ class Game extends \Table
         $this->gamestate->nextState("playCard");
     }
 
+    public function actAdd(): void
+    {
+        // Retrieve the active player ID.
+        $player_id = (int)$this->getActivePlayerId();
+
+        // at the end of the action, move to the next state
+        $this->gamestate->nextState("add");
+    }
+
     public function actPass(): void
     {
         // Retrieve the active player ID.
@@ -291,6 +300,7 @@ class Game extends \Table
         // $this->initStat("player", "player_teststat1", 0);
 
         // TODO: Setup the initial game situation here.
+        static::DbQuery("INSERT into counter (counter_name, counter_value) values ('my_first_counter',0)");
 
         // Activate first player once everything has been initialized and ready.
         $this->activeNextPlayer();

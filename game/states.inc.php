@@ -74,8 +74,9 @@ $machinestates = [
             // these actions are called from the front with bgaPerformAction, and matched to the function on the game.php file
             "actPlayCard", 
             "actPass",
+            "actAdd",
         ],
-        "transitions" => ["playCard" => 3, "pass" => 3]
+        "transitions" => ["playCard" => 3, "pass" => 3, "add" => 3]
     ],
 
     3 => [
