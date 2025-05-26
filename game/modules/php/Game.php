@@ -112,6 +112,8 @@ class Game extends \Table
         // Retrieve the active player ID.
         $player_id = (int)$this->getActivePlayerId();
 
+        static::DbQuery("UPDATE counter set counter_value = counter_value + 1 where counter_name = 'my_first_counter'");
+
         // at the end of the action, move to the next state
         $this->gamestate->nextState("add");
     }

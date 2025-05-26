@@ -153,7 +153,8 @@ function (dojo, declare) {
                         cardId => this.statusBar.addActionButton(_('Play card with id ${card_id}').replace('${card_id}', cardId), () => this.onCardClick(cardId))
                     ); 
 
-                    this.statusBar.addActionButton(_('Pass'), () => this.bgaPerformAction("actPass"), { color: 'secondary' }); 
+                    this.statusBar.addActionButton(_('Add'), () => this.onAddClick());
+                    this.statusBar.addActionButton(_('Pass'), () => this.bgaPerformAction("actPass"), { color: 'secondary' });
                     break;
                 }
             }
@@ -196,9 +197,18 @@ function (dojo, declare) {
                 // What to do after the server call if it succeeded
                 // (most of the time, nothing, as the game will react to notifs / change of state instead)
             });        
-        },    
+        },
 
-        
+        onAddClick: function()
+        {
+            console.log( 'onAddClick');
+
+            this.bgaPerformAction("actAdd", {}).then(() =>  {
+                // What to do after the server call if it succeeded
+                // (most of the time, nothing, as the game will react to notifs / change of state instead)
+            });
+        },
+
         ///////////////////////////////////////////////////
         //// Reaction to cometD notifications
 
