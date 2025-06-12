@@ -178,12 +178,19 @@ class Game extends \Table
 
         // Give some extra time to the active player when he completed an action
         $this->giveExtraTime($player_id);
-        
-        $this->activeNextPlayer();
 
-        // Go to another gamestate
-        // Here, we would detect if the game is over, and in this case use "endGame" transition instead 
-        $this->gamestate->nextState("nextPlayer");
+        //OMS check if counter is 5+, if so end the game
+        $counter_result = $this->getObjectFromDB( "SELECT counter_value 'counter' FROM counter WHERE counter_name = 'my_first_counter'" );
+        $this->dump('counter_result value',$counter_result['counter']);
+        if($counter_result['counter'] >= 5){
+            $this->DbQuery( "UPDATE `player` SET `player_score` = 1000 WHERE `player_id` = '".$this->getActivePlayerId()."'" );
+            $this->gamestate->nextState("endGame");
+        }else{
+            $this->activeNextPlayer();
+            // Go to another gamestate
+            // Here, we would detect if the game is over, and in this case use "endGame" transition instead
+            $this->gamestate->nextState("nextPlayer");
+        }
     }
 
     /**
