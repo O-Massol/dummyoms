@@ -70,7 +70,10 @@ function (dojo, declare) {
             });
             
             // TODO: Set up your game interface here, according to "gamedatas"
-            
+            this.getGameAreaElement().insertAdjacentHTML('beforeend', `
+                <div id="red200x300">
+                </div>
+            `);
  
             // Setup game notifications to handle (see "setupNotifications" method below)
             this.setupNotifications();
