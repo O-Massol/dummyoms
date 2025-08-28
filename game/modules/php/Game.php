@@ -23,6 +23,7 @@ require_once(APP_GAMEMODULE_PATH . "module/table/table.game.php");
 class Game extends \Table
 {
     private static array $CARD_TYPES;
+    private static array $STARTUPS;
 
     /**
      * Your global variables labels:
@@ -54,6 +55,12 @@ class Game extends \Table
             ],
             // ...
         ];
+
+        self::$STARTUPS = ['RED','BLUE'];
+
+        //Init deck
+        $this->cards = $this->getNew( "module.common.deck" );
+        $this->cards->init( "cards" );
 
         /* example of notification decorator.
         // automatically complete notification args when needed
@@ -245,6 +252,11 @@ class Game extends \Table
         );
 
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
+        // Cards in player hand
+        $result['hand'] = $this->cards->getCardsInLocation( 'hand', $current_player_id );
+
+        // Cards played on the table
+        $result['cardsontable'] = $this->cards->getCardsInLocation( 'cardsontable' );
 
         return $result;
     }
@@ -292,6 +304,10 @@ class Game extends \Table
             )
         );
 
+        static::DbQuery(
+                "UPDATE player set capital = 10"
+        );
+
         $this->reattributeColorsBasedOnPreferences($players, $gameinfos["player_colors"]);
         $this->reloadPlayersBasicInfos();
 
@@ -311,8 +327,24 @@ class Game extends \Table
         // TODO: Setup the initial game situation here.
         static::DbQuery("INSERT into counter (counter_name, counter_value) values ('my_first_counter',0)");
 
+        $cards = array();
+        $cards[] = array( 'type' => 'RED', 'type_arg' => '0', 'nbr' => 5);
+        $cards[] = array( 'type' => 'BLUE', 'type_arg' => '0', 'nbr' => 3);
+
+        $this->cards->createCards( $cards, 'deck' );
+        $this->cards->shuffle( 'deck' );
+
+        foreach ($players as $player_id => $player) {
+            $this->cards->pickCards( 3, 'deck', $player_id );
+        }
+
         // Activate first player once everything has been initialized and ready.
         $this->activeNextPlayer();
+    }
+
+    function draw($player_id)
+    {
+
     }
 
     /**

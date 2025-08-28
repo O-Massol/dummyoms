@@ -68,12 +68,34 @@ function (dojo, declare) {
                     </div>
                 `);
             });
-            
-            // TODO: Set up your game interface here, according to "gamedatas"
-            this.getGameAreaElement().insertAdjacentHTML('beforeend', `
-                <div id="red200x300">
+
+            // Player hand
+            document.getElementById('game_play_area').insertAdjacentHTML('beforeend', `
+                <div id="myhand_wrap" class="whiteblock">
+                    <b id="myhand_label">${_('My hand')}</b>
+                    <div id="myhand">
+                    </div>
                 </div>
             `);
+
+            //this.playerHand = new ebg.stock(); // new stock object for hand
+            //this.playerHand.create( this, $('myhand'), this.cardwidth, this.cardheight );
+
+            //this.playerHand.image_items_per_row = 1;
+
+            //// Create card types:
+            //for( var color=0;color<=1;color++ )
+            //{
+            //    this.playerHand.addItemType( card_type_id, card_type_id, g_gamethemeurl+'img/cards.jpg', color );
+            //}
+
+            Object.values(gamedatas.hand).forEach(card => {
+                console.log("oms card in hand : ", card);
+                document.getElementById('myhand').insertAdjacentHTML('beforeend', `
+                <div id="myhand_card_${card.id}" class="${card.type}">
+                </div>
+            `);
+            });
  
             // Setup game notifications to handle (see "setupNotifications" method below)
             this.setupNotifications();

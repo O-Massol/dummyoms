@@ -67,10 +67,21 @@
     }
 */
 
-#red200x300 {
-    width: 200px;
-    height: 300px;
+.RED {
+    display: inline-block;
+    position: relative;
+    margin-top: 5px;
+    width: 72px;
+    height: 96px;
     background-image: url('img/red200x300.png');
 }
 
+.BLUE {
+    display: inline-block;
+    position: relative;
+    margin-top: 5px;
+    width: 72px;
+    height: 96px;
+    background-image: url('img/blue200x300.png');
+}
 
